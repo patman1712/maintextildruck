@@ -1,273 +1,480 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-    <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | CopyFanshop</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- Summernote CSS -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-color: #bd1026;
-            --secondary-color: #333;
-            --text-color: #333;
-            --bg-color: #f8f9fa;
-            --white: #ffffff;
+            --primary-color: #bd1026; /* Brand Red */
+            --sidebar-width: 280px;
+            --topbar-height: 60px;
+            --bg-light: #f4f6f9;
+            --text-dark: #343a40;
         }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
         }
-        .navbar {
-            background-color: var(--primary-color) !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        /* Topbar */
+        .topbar {
+            height: var(--topbar-height);
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
         }
-        .navbar-brand {
-            font-weight: bold;
+
+        .brand-logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            width: var(--sidebar-width);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: var(--topbar-height);
+            bottom: 0;
+            left: 0;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            z-index: 1020;
+            padding-top: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-category {
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            color: #6c757d;
+            padding: 1rem 1.5rem 0.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            user-select: none;
         }
+        
+        .nav-category:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-category .bi-chevron-down {
+            transition: transform 0.3s ease;
+        }
+
+        .nav-category.collapsed .bi-chevron-down {
+            transform: rotate(-90deg);
+        }
+
+        .nav-link {
+            color: #495057;
+            padding: 0.6rem 1.5rem;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: rgba(189, 16, 38, 0.05);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(189, 16, 38, 0.08);
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--topbar-height);
+            padding: 2rem;
+            min-height: calc(100vh - var(--topbar-height));
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 1.25rem;
+            font-weight: 600;
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
+            padding: 0.6rem 1.5rem;
+            font-weight: 500;
         }
+
         .btn-primary:hover {
             background-color: #a00d20;
             border-color: #a00d20;
         }
-        .list-group-item.active {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
+
+        /* Dashboard Stats */
+        .stat-card {
+            transition: transform 0.2s;
         }
-        .card {
-            border: none;
-            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
-        .admin-sidebar {
-            background: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
-        .admin-content {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        }
-        h3 {
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-        .btn-outline-light:hover {
-            color: var(--primary-color);
-            background-color: var(--white);
-            border-color: var(--white);
+        .bg-red-soft { background: rgba(189, 16, 38, 0.1); color: var(--primary-color); }
+        .bg-blue-soft { background: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+        .bg-green-soft { background: rgba(25, 135, 84, 0.1); color: #198754; }
+
+        /* Mobile Responsive */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .brand-logo {
+                width: auto;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark navbar-expand-lg mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                Admin Dashboard
+
+    <!-- Topbar -->
+    <header class="topbar d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link d-lg-none me-3 text-dark p-0" id="sidebarToggle">
+                <i class="bi bi-list fs-4"></i>
+            </button>
+            <a href="#" class="brand-logo">
+                <i class="bi bi-shield-lock-fill me-2"></i> ADMIN PANEL
             </a>
-            <div class="d-flex">
-                <a href="/" class="btn btn-outline-light me-2" target="_blank">Zur Website</a>
-                <a href="/logout" class="btn btn-light text-danger fw-bold">Logout</a>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <a href="/" target="_blank" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
+                <i class="bi bi-box-arrow-up-right me-2"></i> Website ansehen
+            </a>
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" id="userDropdown" data-bs-toggle="dropdown">
+                    <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">A</div>
+                    <span class="d-none d-sm-inline fw-medium">Admin</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                    <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right me-2"></i> Abmelden</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="nav flex-column">
+            <a href="#" class="nav-link active" data-bs-target="#dashboard" onclick="showTab('dashboard', this)">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+
+            <a class="nav-category d-flex align-items-center justify-content-between text-decoration-none collapsed" data-bs-toggle="collapse" href="#menu-inhalte" role="button" aria-expanded="false">
+                INHALTE <i class="bi bi-chevron-down"></i>
+            </a>
+            <div class="collapse" id="menu-inhalte">
+                {% for category, items in menu_structure.items() %}
+                    {% if category in ['HOME', 'ÜBER UNS', 'SERVICES', 'TEXTILVEREDELUNG', 'REFERENZEN', 'KUNDEN', 'KATALOG'] %}
+                    <a href="#" class="nav-link" data-bs-target="#{{ category|replace(' ', '-') }}" onclick="showTab('{{ category|replace(' ', '-') }}', this)">
+                        {% if category == 'HOME' %}<i class="bi bi-house-door"></i>
+                        {% elif category == 'ÜBER UNS' %}<i class="bi bi-info-circle"></i>
+                        {% elif category == 'SERVICES' %}<i class="bi bi-grid"></i>
+                        {% elif category == 'TEXTILVEREDELUNG' %}<i class="bi bi-scissors"></i>
+                        {% elif category == 'REFERENZEN' %}<i class="bi bi-star"></i>
+                        {% elif category == 'KUNDEN' %}<i class="bi bi-people"></i>
+                        {% elif category == 'KATALOG' %}<i class="bi bi-book"></i>
+                        {% endif %}
+                        {{ category|title }}
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <a class="nav-category d-flex align-items-center justify-content-between text-decoration-none collapsed" data-bs-toggle="collapse" href="#menu-kommunikation" role="button" aria-expanded="false">
+                KOMMUNIKATION <i class="bi bi-chevron-down"></i>
+            </a>
+            <div class="collapse" id="menu-kommunikation">
+                {% for category, items in menu_structure.items() %}
+                    {% if category in ['KONTAKT', 'WHATSAPP'] %}
+                    <a href="#" class="nav-link" data-bs-target="#{{ category|replace(' ', '-') }}" onclick="showTab('{{ category|replace(' ', '-') }}', this)">
+                        {% if category == 'KONTAKT' %}<i class="bi bi-envelope"></i>
+                        {% elif category == 'WHATSAPP' %}<i class="bi bi-whatsapp"></i>
+                        {% endif %}
+                        {{ category|title }}
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <a class="nav-category d-flex align-items-center justify-content-between text-decoration-none collapsed" data-bs-toggle="collapse" href="#menu-einstellungen" role="button" aria-expanded="false">
+                EINSTELLUNGEN <i class="bi bi-chevron-down"></i>
+            </a>
+            <div class="collapse" id="menu-einstellungen">
+                {% for category, items in menu_structure.items() %}
+                    {% if category in ['EMAIL SETTINGS', 'RECHTLICHES', 'FOOTER', 'NAVIGATION', 'SIDEBAR', 'DESIGN'] %}
+                    <a href="#" class="nav-link" data-bs-target="#{{ category|replace(' ', '-') }}" onclick="showTab('{{ category|replace(' ', '-') }}', this)">
+                        {% if category == 'EMAIL SETTINGS' %}<i class="bi bi-envelope-gear"></i>
+                        {% elif category == 'RECHTLICHES' %}<i class="bi bi-file-earmark-text"></i>
+                        {% elif category == 'FOOTER' %}<i class="bi bi-layout-three-columns"></i>
+                        {% elif category == 'NAVIGATION' %}<i class="bi bi-menu-button-wide"></i>
+                        {% elif category == 'SIDEBAR' %}<i class="bi bi-layout-sidebar"></i>
+                        {% elif category == 'DESIGN' %}<i class="bi bi-palette"></i>
+                        {% endif %}
+                        {{ category|title }}
+                    </a>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </nav>
-    <div class="container pb-5">
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Flash Messages -->
         {% with messages = get_flashed_messages() %}
           {% if messages %}
-            <div class="alert alert-success">{{ messages[0] }}</div>
+            <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> {{ messages[0] }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
           {% endif %}
         {% endwith %}
-        
-        <div class="row">
-            <div class="col-md-3 mb-4">
-                <div class="admin-sidebar p-3">
-                    <div class="list-group list-group-flush" id="list-tab" role="tablist">
-                        {% for category, items in menu_structure.items() %}
-                        <a class="list-group-item list-group-item-action {{ 'active' if loop.first }} rounded mb-1 border-0" id="list-{{ category|replace(' ', '-') }}-list" data-bs-toggle="list" href="#list-{{ category|replace(' ', '-') }}" role="tab">
-                            {% if category == 'HOME' %}<i class="bi bi-house-door me-2"></i>
-                            {% elif category == 'ÜBER UNS' %}<i class="bi bi-info-circle me-2"></i>
-                            {% elif category == 'SERVICES' %}<i class="bi bi-gear me-2"></i>
-                            {% elif category == 'REFERENZEN' %}<i class="bi bi-star me-2"></i>
-                            {% elif category == 'KONTAKT' %}<i class="bi bi-envelope me-2"></i>
-                            {% elif category == 'KATALOG' %}<i class="bi bi-journal-bookmark me-2"></i>
-                            {% elif category == 'RECHTLICHES' %}<i class="bi bi-file-earmark-text me-2"></i>
-                            {% else %}<i class="bi bi-pencil-square me-2"></i>{% endif %}
-                            {{ category }}
-                        </a>
-                        {% endfor %}
+
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="content-section">
+            <h3 class="fw-bold mb-4">Willkommen zurück!</h3>
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card h-100 stat-card">
+                        <div class="card-body p-4">
+                            <div class="stat-icon bg-red-soft">
+                                <i class="bi bi-pencil-square"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Inhalte bearbeiten</h5>
+                            <p class="card-text text-muted">Aktualisiere Texte, Bilder und Informationen auf deiner Website.</p>
+                            <a href="#" onclick="document.querySelector('[data-bs-target=\'#HOME\']').click()" class="btn btn-sm btn-outline-danger stretched-link">Los geht's</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-9">
-                <div class="admin-content">
-                    <div class="tab-content" id="nav-tabContent">
-                        {% for category, items in menu_structure.items() %}
-                        <div class="tab-pane fade {{ 'show active' if loop.first }}" id="list-{{ category|replace(' ', '-') }}" role="tabpanel">
-                            <form method="post" enctype="multipart/form-data">
-                                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                                    <h3 class="m-0 border-0 p-0">{{ category }}</h3>
-                                </div>
-                                
-                                {% for item_id in items %}
-                                    {% for section in sections %}
-                                        {% if section['id'] == item_id %}
-                                            <div class="mb-4 p-3 border rounded bg-light">
-                                                <label class="form-label fw-bold text-uppercase mb-3" style="letter-spacing: 1px; color: var(--primary-color);">
-                                                    {% if item_id == 'home_text' %}Einleitungstext
-                                                    {% elif item_id == 'company_name' %}Firmenname
-                                                    {% elif item_id == 'page_title' %}Seitentitel (Browser-Tab)
-                                                    {% elif item_id == 'meta_description' %}Beschreibung (SEO)
-                                                    {% elif item_id == 'home_button_text' %}Button-Text
-                                                    {% elif item_id == 'home_button_link' %}Button-Link
-                                                    {% elif item_id == 'header_image' %}Header-Bild
-                                                    {% elif item_id == 'impressum_button_text' %}Impressum Button Text
-                                                    {% elif item_id == 'impressum_button_link' %}Impressum Button Link
-                                                    {% elif item_id == 'datenschutz_button_text' %}Datenschutz Button Text
-                                                    {% elif item_id == 'datenschutz_button_link' %}Datenschutz Button Link
-                                                    {% else %}{{ item_id|upper|replace('_', ' ') }}{% endif %}
-                                                </label>
-
-                                                {% if item_id == 'header_image' or item_id == 'service_intro_image' or item_id == 'site_logo' or item_id == 'textile_image_1' or item_id == 'textile_image_2' %}
-                                                     <div class="mb-3">
-                                                         <div>
-                                                             <img id="image-preview-{{ item_id }}" src="{{ section['content'] }}" style="max-width: 100%; height: auto; max-height: 200px;" class="img-fluid rounded">
-                                                         </div><br>
-                                                         <input type="file" name="{{ item_id }}" class="form-control" onchange="previewImage(this, 'image-preview-{{ item_id }}')">
-                                                         {% if item_id == 'header_image' %}
-                                                            <small class="text-muted">Empfohlene Größe: 2000x1200px</small>
-                                                         {% endif %}
-                                                     </div>
-                                                {% elif item_id.startswith('whatsapp_') or item_id.startswith('contact_label_') or item_id == 'contact_title' or item_id == 'contact_button_text' or item_id in ['resend_api_key', 'recipient_email', 'sender_email'] or item_id.endswith('_button_text') or item_id.endswith('_button_link') or item_id.startswith('menu_') or item_id.startswith('social_') or item_id == 'primary_color' or item_id == 'sidebar_contact_title' or (item_id.startswith('footer_') and not item_id.endswith('_content') and not item_id.endswith('_copyright')) or item_id == 'contact_text_color' or item_id == 'slider_headline' or item_id == 'textile_headline' or item_id == 'references_title' or item_id == 'company_name' or item_id == 'page_title' or item_id == 'meta_description' %}
-                                                    {% if item_id.endswith('_color') or item_id == 'primary_color' %}
-                                                        <div class="input-group">
-                                                            <input type="color" class="form-control form-control-color" id="{{ item_id }}" value="{{ section['content'] }}" title="Choose your color" onchange="document.getElementById('text-{{ item_id }}').value = this.value">
-                                                            <input type="text" class="form-control" id="text-{{ item_id }}" name="content_{{ item_id }}" value="{{ section['content'] }}" onchange="document.getElementById('{{ item_id }}').value = this.value">
-                                                        </div>
-                                                    {% else %}
-                                                        <input type="text" name="content_{{ item_id }}" class="form-control form-control-lg" value="{{ section['content'] }}">
-                                                        {% if item_id.endswith('_icon') %}
-                                                            <small class="text-muted">Bootstrap Icon Klasse, z.B. "bi bi-instagram" oder "bi bi-whatsapp"</small>
-                                                        {% elif item_id == 'resend_api_key' %}
-                                                            <small class="text-muted d-block mt-1">Erstelle einen API Key unter <a href="https://resend.com/api-keys" target="_blank">resend.com</a>.</small>
-                                                        {% elif item_id == 'recipient_email' %}
-                                                            <small class="text-muted d-block mt-1">Hier deine E-Mail-Adresse eintragen, an welche die Anfragen gesendet werden sollen.</small>
-                                                        {% elif item_id == 'sender_email' %}
-                                                            <small class="text-muted d-block mt-1">Die Adresse, von der die Mail technisch gesendet wird (muss bei Resend verifiziert sein).</small>
-                                                        {% endif %}
-                                                    {% endif %}
-                                                {% elif item_id == 'slider_text' %}
-                                                    <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ section['content'] }}</textarea>
-                                                    <hr>
-                                                    <label class="form-label fw-bold mt-3">Kundenlogos verwalten:</label>
-                                                    <div class="row">
-                                                        {% for logo in customer_logos %}
-                                                        <div class="col-md-2 mb-3 text-center">
-                                                            <div class="border p-2 rounded">
-                                                                <img src="{{ logo.filepath }}" class="img-fluid mb-2" style="max-height: 50px;">
-                                                                <button type="submit" name="delete_logo_id" value="{{ logo.id }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Logo wirklich löschen?')">Löschen</button>
-                                                            </div>
-                                                        </div>
-                                                        {% endfor %}
-                                                    </div>
-                                                    <div class="mt-3">
-                                                        <label class="form-label">Neues Logo hochladen:</label>
-                                                        <input type="file" name="new_customer_logo" class="form-control">
-                                                    </div>
-                                                {% elif item_id == 'instagram_widget' %}
-                                                    <textarea name="content_{{ item_id }}" class="form-control" rows="6" style="font-family: monospace;">{{ section['content'] }}</textarea>
-                                                    <small class="text-muted">Füge hier den HTML-Code von LightWidget ein. Achtung: Keine Vorschau verfügbar, da Scripts im Admin-Bereich blockiert werden könnten.</small>
-                                                {% else %}
-                                                    <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ section['content'] }}</textarea>
-                                                {% endif %}
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endfor %}
-                                
-                                <div class="mt-4 text-end">
-                                    <button type="submit" class="btn btn-primary btn-lg px-5">
-                                        Speichern
-                                    </button>
-                                </div>
-                            </form>
+                <div class="col-md-4">
+                    <div class="card h-100 stat-card">
+                        <div class="card-body p-4">
+                            <div class="stat-icon bg-blue-soft">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Kontaktanfragen</h5>
+                            <p class="card-text text-muted">Konfiguriere deine E-Mail Einstellungen und Empfänger.</p>
+                            <a href="#" onclick="document.querySelector('[data-bs-target=\'#KONTAKT\']').click()" class="btn btn-sm btn-outline-primary stretched-link">Einstellungen</a>
                         </div>
-                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 stat-card">
+                        <div class="card-body p-4">
+                            <div class="stat-icon bg-green-soft">
+                                <i class="bi bi-palette"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">Design anpassen</h5>
+                            <p class="card-text text-muted">Ändere Farben, Logos und das Erscheinungsbild.</p>
+                            <a href="#" onclick="document.querySelector('[data-bs-target=\'#DESIGN\']').click()" class="btn btn-sm btn-outline-success stretched-link">Design</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Summernote JS -->
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-    <script>
-      function previewImage(input, previewId) {
-          if (input.files && input.files[0]) {
-              var reader = new FileReader();
-              reader.onload = function(e) {
-                  $('#' + previewId).attr('src', e.target.result);
-              }
-              reader.readAsDataURL(input.files[0]);
-          }
-      }
 
-      $(document).ready(function() {
-        // Function to update preview
-        function updatePreview(content, previewFrame) {
-            var doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-            var html = `
-                <!DOCTYPE html>
-                <html lang="de">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <link rel='stylesheet' href='/static/assets/style.min.css' media='all' />
-                    <link rel='stylesheet' href='/static/assets/0d8491a337971e3ba2e2c825ddd32a3c.css' media='all' />
-                    <link rel='stylesheet' href='/static/assets/5_style.min.css' media='all' />
-                    <link rel='stylesheet' href='/static/assets/genericons.css' media='all' />
-                    <link rel='stylesheet' href='/static/assets/font-awesome-3.min.css' media='all' />
-                    <style>
-                        body { background: white; padding: 20px; }
-                        /* Ensure text color is visible */
-                        body { color: #333; }
-                        h1, h2, h3, h4, h5, h6 { color: #333; }
-                    </style>
-                </head>
-                <body class="home page-template-default page wp-embed-responsive inspiro-front-page colors-custom">
-                    <div class="entry-content">
-                        ${content}
-                    </div>
-                </body>
-                </html>
-            `;
-            doc.open();
-            doc.write(html);
-            doc.close();
+        <!-- Dynamic Content Sections -->
+        {% for category, items in menu_structure.items() %}
+        <div id="{{ category|replace(' ', '-') }}-view" class="content-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold m-0">{{ category|title }}</h3>
+            </div>
+            
+            <div class="card">
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        <!-- Add hidden input to keep track of active tab -->
+                        <input type="hidden" name="active_tab" value="{{ category|replace(' ', '-') }}">
+                        
+                        {% for item_id in items %}
+                            {% set item_content = content.get(item_id, '') %}
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-uppercase small text-muted mb-2">
+                                    {% if item_id == 'home_text' %}Einleitungstext
+                                    {% elif item_id == 'company_name' %}Firmenname
+                                    {% elif item_id == 'page_title' %}Seitentitel (Browser-Tab)
+                                    {% elif item_id == 'meta_description' %}Beschreibung (SEO)
+                                    {% elif item_id == 'home_button_text' %}Button-Text
+                                    {% elif item_id == 'home_button_link' %}Button-Link
+                                    {% elif item_id == 'header_image' %}Header-Bild
+                                    {% else %}{{ item_id|replace('_', ' ')|title }}{% endif %}
+                                </label>
+
+                                {% if item_id == 'header_image' or item_id == 'service_intro_image' or item_id == 'site_logo' or item_id == 'textile_image_1' or item_id == 'textile_image_2' %}
+                                     <div class="bg-light p-3 rounded border mb-2 text-center">
+                                         {% if item_content %}
+                                         <img id="image-preview-{{ item_id }}" src="{{ item_content }}" style="max-height: 200px; max-width: 100%; object-fit: contain;" class="rounded shadow-sm">
+                                         {% else %}
+                                         <div class="text-muted py-4"><i class="bi bi-image fs-1"></i><br>Kein Bild ausgewählt</div>
+                                         {% endif %}
+                                     </div>
+                                     <input type="file" name="{{ item_id }}" class="form-control" onchange="previewImage(this, 'image-preview-{{ item_id }}')">
+                                {% elif item_id.endswith('_color') or item_id == 'primary_color' %}
+                                    <div class="input-group">
+                                        <input type="color" class="form-control form-control-color" id="{{ item_id }}" value="{{ item_content }}" title="Choose your color" onchange="document.getElementById('text-{{ item_id }}').value = this.value">
+                                        <input type="text" class="form-control" id="text-{{ item_id }}" name="content_{{ item_id }}" value="{{ item_content }}" onchange="document.getElementById('{{ item_id }}').value = this.value">
+                                    </div>
+                                {% elif item_id == 'slider_text' %}
+                                    <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ item_content }}</textarea>
+                                    <div class="mt-4 p-3 bg-light rounded border">
+                                        <h6 class="fw-bold mb-3">Kundenlogos verwalten</h6>
+                                        <div class="row g-3 mb-3">
+                                            {% for logo in customer_logos %}
+                                            <div class="col-6 col-md-3 col-lg-2">
+                                                <div class="card h-100 shadow-sm">
+                                                    <div class="card-body p-2 d-flex align-items-center justify-content-center" style="height: 80px;">
+                                                        <img src="{{ logo.filepath }}" class="img-fluid" style="max-height: 100%;">
+                                                    </div>
+                                                    <div class="card-footer p-1 bg-white border-top-0">
+                                                        <button type="submit" name="delete_logo_id" value="{{ logo.id }}" class="btn btn-outline-danger btn-sm w-100 py-0" onclick="return confirm('Logo wirklich löschen?')"><i class="bi bi-trash"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <label class="form-label">Neues Logo hinzufügen</label>
+                                        <input type="file" name="new_customer_logo" class="form-control">
+                                    </div>
+                                {% elif item_id == 'instagram_widget' %}
+                                    <textarea name="content_{{ item_id }}" class="form-control font-monospace" rows="6">{{ item_content }}</textarea>
+                                    <div class="form-text">Füge hier den HTML-Code von LightWidget ein.</div>
+                                {% elif item_id.startswith('whatsapp_') or item_id.startswith('contact_label_') or item_id == 'contact_title' or item_id == 'contact_button_text' or item_id in ['resend_api_key', 'recipient_email', 'sender_email'] or item_id.endswith('_button_text') or item_id.endswith('_button_link') or item_id.startswith('menu_') or item_id.startswith('social_') or item_id == 'sidebar_contact_title' or (item_id.startswith('footer_') and not item_id.endswith('_content') and not item_id.endswith('_copyright')) or item_id == 'contact_text_color' or item_id == 'slider_headline' or item_id == 'textile_headline' or item_id == 'references_title' or item_id == 'company_name' or item_id == 'page_title' or item_id == 'meta_description' or item_id == 'home_button_text' or item_id == 'home_button_link' %}
+                                    <input type="text" name="content_{{ item_id }}" class="form-control" value="{{ item_content }}">
+                                {% else %}
+                                    <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ item_content }}</textarea>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="sticky-bottom bg-white py-3 border-top mt-4 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                                <i class="bi bi-save me-2"></i> Änderungen speichern
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    
+    <script>
+        // Tab Handling
+        function showTab(tabId, linkElement) {
+            // Hide all views
+            document.querySelectorAll('.content-section').forEach(el => el.classList.add('d-none'));
+            document.getElementById(tabId + '-view').classList.remove('d-none');
+            
+            // Update active link
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            linkElement.classList.add('active');
+            
+            // Open parent collapse if closed
+            var parentCollapse = linkElement.closest('.collapse');
+            if (parentCollapse && !parentCollapse.classList.contains('show')) {
+                new bootstrap.Collapse(parentCollapse, { toggle: true });
+            }
+
+            // Mobile sidebar toggle close
+            if (window.innerWidth < 992) {
+                document.getElementById('sidebar').classList.remove('show');
+            }
         }
 
-        $('textarea[id^="summernote-"]').each(function() {
-            var textarea = $(this);
-            var sectionId = textarea.attr('id').replace('summernote-', '');
-            
-            // Create preview container
-            var previewContainer = $('<div class="mt-3"><label class="form-label fw-bold">Live-Vorschau:</label><iframe id="preview-' + sectionId + '" style="width: 100%; height: 400px; border: 1px solid #ddd; border-radius: 4px; background: white;"></iframe></div>');
-            textarea.after(previewContainer);
-            
-            var previewFrame = document.getElementById('preview-' + sectionId);
+        // Image Preview
+        function previewImage(input, previewId) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#' + previewId).attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
-            textarea.summernote({
+        $(document).ready(function() {
+            // Summernote Init
+            $('textarea[id^="summernote-"]').summernote({
                 placeholder: 'Inhalt hier bearbeiten...',
                 tabsize: 2,
                 height: 300,
@@ -281,16 +488,26 @@
                   ['view', ['fullscreen', 'codeview', 'help']]
                 ],
                 callbacks: {
-                    onInit: function() {
-                        updatePreview(textarea.val(), previewFrame);
-                    },
-                    onChange: function(contents) {
-                        updatePreview(contents, previewFrame);
-                    }
+                    // Simple preview update logic could go here if needed
                 }
             });
+
+            // Restore active tab if present in URL or default to dashboard
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('active_tab');
+            if (activeTab) {
+                const targetLink = document.querySelector(`[data-bs-target="#${activeTab}"]`);
+                if (targetLink) targetLink.click();
+            } else {
+                // Default is dashboard, already set in HTML structure but ensure it
+                // showTab('dashboard', document.querySelector('[data-bs-target="#dashboard"]'));
+            }
+            
+            // Sidebar Toggle
+            $('#sidebarToggle').click(function() {
+                $('#sidebar').toggleClass('show');
+            });
         });
-      });
     </script>
 </body>
 </html>
