@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Summernote CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #bd1026;
+            --secondary-color: #333;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+            --white: #ffffff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .navbar {
+            background-color: var(--primary-color) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover {
+            background-color: #a00d20;
+            border-color: #a00d20;
+        }
+        .list-group-item.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+        .admin-sidebar {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .admin-content {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .btn-outline-light:hover {
+            color: var(--primary-color);
+            background-color: var(--white);
+            border-color: var(--white);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-expand-lg mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                Admin Dashboard
+            </a>
+            <div class="d-flex">
+                <a href="/" class="btn btn-outline-light me-2" target="_blank">Zur Website</a>
+                <a href="/logout" class="btn btn-light text-danger fw-bold">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container pb-5">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-success">{{ messages[0] }}</div>
+          {% endif %}
+        {% endwith %}
+        
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="admin-sidebar p-3">
+                    <div class="list-group list-group-flush" id="list-tab" role="tablist">
+                        {% for category, items in menu_structure.items() %}
+                        <a class="list-group-item list-group-item-action {{ 'active' if loop.first }} rounded mb-1 border-0" id="list-{{ category|replace(' ', '-') }}-list" data-bs-toggle="list" href="#list-{{ category|replace(' ', '-') }}" role="tab">
+                            {% if category == 'HOME' %}<i class="bi bi-house-door me-2"></i>
+                            {% elif category == 'ÜBER UNS' %}<i class="bi bi-info-circle me-2"></i>
+                            {% elif category == 'SERVICES' %}<i class="bi bi-gear me-2"></i>
+                            {% elif category == 'REFERENZEN' %}<i class="bi bi-star me-2"></i>
+                            {% elif category == 'KONTAKT' %}<i class="bi bi-envelope me-2"></i>
+                            {% elif category == 'KATALOG' %}<i class="bi bi-journal-bookmark me-2"></i>
+                            {% elif category == 'RECHTLICHES' %}<i class="bi bi-file-earmark-text me-2"></i>
+                            {% else %}<i class="bi bi-pencil-square me-2"></i>{% endif %}
+                            {{ category }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="admin-content">
+                    <div class="tab-content" id="nav-tabContent">
+                        {% for category, items in menu_structure.items() %}
+                        <div class="tab-pane fade {{ 'show active' if loop.first }}" id="list-{{ category|replace(' ', '-') }}" role="tabpanel">
+                            <form method="post" enctype="multipart/form-data">
+                                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                                    <h3 class="m-0 border-0 p-0">{{ category }}</h3>
+                                </div>
+                                
+                                {% for item_id in items %}
+                                    {% for section in sections %}
+                                        {% if section['id'] == item_id %}
+                                            <div class="mb-4 p-3 border rounded bg-light">
+                                                <label class="form-label fw-bold text-uppercase mb-3" style="letter-spacing: 1px; color: var(--primary-color);">
+                                                    {% if item_id == 'home_text' %}Einleitungstext
+                                                    {% elif item_id == 'company_name' %}Firmenname
+                                                    {% elif item_id == 'page_title' %}Seitentitel (Browser-Tab)
+                                                    {% elif item_id == 'meta_description' %}Beschreibung (SEO)
+                                                    {% elif item_id == 'home_button_text' %}Button-Text
+                                                    {% elif item_id == 'home_button_link' %}Button-Link
+                                                    {% elif item_id == 'header_image' %}Header-Bild
+                                                    {% elif item_id == 'impressum_button_text' %}Impressum Button Text
+                                                    {% elif item_id == 'impressum_button_link' %}Impressum Button Link
+                                                    {% elif item_id == 'datenschutz_button_text' %}Datenschutz Button Text
+                                                    {% elif item_id == 'datenschutz_button_link' %}Datenschutz Button Link
+                                                    {% else %}{{ item_id|upper|replace('_', ' ') }}{% endif %}
+                                                </label>
+
+                                                {% if item_id == 'header_image' or item_id == 'service_intro_image' or item_id == 'site_logo' or item_id == 'textile_image_1' or item_id == 'textile_image_2' %}
+                                                     <div class="mb-3">
+                                                         <div>
+                                                             <img id="image-preview-{{ item_id }}" src="{{ section['content'] }}" style="max-width: 100%; height: auto; max-height: 200px;" class="img-fluid rounded">
+                                                         </div><br>
+                                                         <input type="file" name="{{ item_id }}" class="form-control" onchange="previewImage(this, 'image-preview-{{ item_id }}')">
+                                                         {% if item_id == 'header_image' %}
+                                                            <small class="text-muted">Empfohlene Größe: 2000x1200px</small>
+                                                         {% endif %}
+                                                     </div>
+                                                {% elif item_id.startswith('whatsapp_') or item_id.startswith('contact_label_') or item_id == 'contact_title' or item_id == 'contact_button_text' or item_id in ['resend_api_key', 'recipient_email', 'sender_email'] or item_id.endswith('_button_text') or item_id.endswith('_button_link') or item_id.startswith('menu_') or item_id.startswith('social_') or item_id == 'primary_color' or item_id == 'sidebar_contact_title' or (item_id.startswith('footer_') and not item_id.endswith('_content') and not item_id.endswith('_copyright')) or item_id == 'contact_text_color' or item_id == 'slider_headline' or item_id == 'textile_headline' or item_id == 'references_title' or item_id == 'company_name' or item_id == 'page_title' or item_id == 'meta_description' %}
+                                                    {% if item_id.endswith('_color') or item_id == 'primary_color' %}
+                                                        <div class="input-group">
+                                                            <input type="color" class="form-control form-control-color" id="{{ item_id }}" value="{{ section['content'] }}" title="Choose your color" onchange="document.getElementById('text-{{ item_id }}').value = this.value">
+                                                            <input type="text" class="form-control" id="text-{{ item_id }}" name="content_{{ item_id }}" value="{{ section['content'] }}" onchange="document.getElementById('{{ item_id }}').value = this.value">
+                                                        </div>
+                                                    {% else %}
+                                                        <input type="text" name="content_{{ item_id }}" class="form-control form-control-lg" value="{{ section['content'] }}">
+                                                        {% if item_id.endswith('_icon') %}
+                                                            <small class="text-muted">Bootstrap Icon Klasse, z.B. "bi bi-instagram" oder "bi bi-whatsapp"</small>
+                                                        {% elif item_id == 'resend_api_key' %}
+                                                            <small class="text-muted d-block mt-1">Erstelle einen API Key unter <a href="https://resend.com/api-keys" target="_blank">resend.com</a>.</small>
+                                                        {% elif item_id == 'recipient_email' %}
+                                                            <small class="text-muted d-block mt-1">Hier deine E-Mail-Adresse eintragen, an welche die Anfragen gesendet werden sollen.</small>
+                                                        {% elif item_id == 'sender_email' %}
+                                                            <small class="text-muted d-block mt-1">Die Adresse, von der die Mail technisch gesendet wird (muss bei Resend verifiziert sein).</small>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% elif item_id == 'slider_text' %}
+                                                    <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ section['content'] }}</textarea>
+                                                    <hr>
+                                                    <label class="form-label fw-bold mt-3">Kundenlogos verwalten:</label>
+                                                    <div class="row">
+                                                        {% for logo in customer_logos %}
+                                                        <div class="col-md-2 mb-3 text-center">
+                                                            <div class="border p-2 rounded">
+                                                                <img src="{{ logo.filepath }}" class="img-fluid mb-2" style="max-height: 50px;">
+                                                                <button type="submit" name="delete_logo_id" value="{{ logo.id }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Logo wirklich löschen?')">Löschen</button>
+                                                            </div>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <label class="form-label">Neues Logo hochladen:</label>
+                                                        <input type="file" name="new_customer_logo" class="form-control">
+                                                    </div>
+                                                {% elif item_id == 'instagram_widget' %}
+                                                    <textarea name="content_{{ item_id }}" class="form-control" rows="6" style="font-family: monospace;">{{ section['content'] }}</textarea>
+                                                    <small class="text-muted">Füge hier den HTML-Code von LightWidget ein. Achtung: Keine Vorschau verfügbar, da Scripts im Admin-Bereich blockiert werden könnten.</small>
+                                                {% else %}
+                                                    <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ section['content'] }}</textarea>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                                
+                                <div class="mt-4 text-end">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                                        Speichern
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script>
+      function previewImage(input, previewId) {
+          if (input.files && input.files[0]) {
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                  $('#' + previewId).attr('src', e.target.result);
+              }
+              reader.readAsDataURL(input.files[0]);
+          }
+      }
+
+      $(document).ready(function() {
+        // Function to update preview
+        function updatePreview(content, previewFrame) {
+            var doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            var html = `
+                <!DOCTYPE html>
+                <html lang="de">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <link rel='stylesheet' href='/static/assets/style.min.css' media='all' />
+                    <link rel='stylesheet' href='/static/assets/0d8491a337971e3ba2e2c825ddd32a3c.css' media='all' />
+                    <link rel='stylesheet' href='/static/assets/5_style.min.css' media='all' />
+                    <link rel='stylesheet' href='/static/assets/genericons.css' media='all' />
+                    <link rel='stylesheet' href='/static/assets/font-awesome-3.min.css' media='all' />
+                    <style>
+                        body { background: white; padding: 20px; }
+                        /* Ensure text color is visible */
+                        body { color: #333; }
+                        h1, h2, h3, h4, h5, h6 { color: #333; }
+                    </style>
+                </head>
+                <body class="home page-template-default page wp-embed-responsive inspiro-front-page colors-custom">
+                    <div class="entry-content">
+                        ${content}
+                    </div>
+                </body>
+                </html>
+            `;
+            doc.open();
+            doc.write(html);
+            doc.close();
+        }
+
+        $('textarea[id^="summernote-"]').each(function() {
+            var textarea = $(this);
+            var sectionId = textarea.attr('id').replace('summernote-', '');
+            
+            // Create preview container
+            var previewContainer = $('<div class="mt-3"><label class="form-label fw-bold">Live-Vorschau:</label><iframe id="preview-' + sectionId + '" style="width: 100%; height: 400px; border: 1px solid #ddd; border-radius: 4px; background: white;"></iframe></div>');
+            textarea.after(previewContainer);
+            
+            var previewFrame = document.getElementById('preview-' + sectionId);
+
+            textarea.summernote({
+                placeholder: 'Inhalt hier bearbeiten...',
+                tabsize: 2,
+                height: 300,
+                toolbar: [
+                  ['style', ['style']],
+                  ['font', ['bold', 'underline', 'clear']],
+                  ['color', ['color']],
+                  ['para', ['ul', 'ol', 'paragraph']],
+                  ['table', ['table']],
+                  ['insert', ['link', 'picture', 'video']],
+                  ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                callbacks: {
+                    onInit: function() {
+                        updatePreview(textarea.val(), previewFrame);
+                    },
+                    onChange: function(contents) {
+                        updatePreview(contents, previewFrame);
+                    }
+                }
+            });
+        });
+      });
+    </script>
+</body>
+</html>
