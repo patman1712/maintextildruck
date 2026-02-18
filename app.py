@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
 import sqlite3
 import os
 import resend
@@ -6,8 +6,14 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_key'  # Change this in production
-DB_NAME = 'database.db'
-UPLOAD_FOLDER = 'static/uploads'
+
+# Configuration for Persistent Storage (Railway Volume)
+DATA_FOLDER = 'data'
+if not os.path.exists(DATA_FOLDER):
+    os.makedirs(DATA_FOLDER)
+
+DB_NAME = os.path.join(DATA_FOLDER, 'database.db')
+UPLOAD_FOLDER = os.path.join(DATA_FOLDER, 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -50,6 +56,10 @@ def get_db_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
     return conn
+
+@app.route('/data/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/')
 def index():
@@ -126,7 +136,7 @@ def admin():
                 filename = secure_filename(file.filename)
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
-                db_path = f"{UPLOAD_FOLDER}/{filename}"
+                db_path = f"data/uploads/{filename}"
                 conn.execute('INSERT INTO customer_logos (filepath) VALUES (?)', (db_path,))
         
         # Handle logo deletion
@@ -143,7 +153,7 @@ def admin():
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(filepath)
                 # Update database with new path
-                db_path = f"{UPLOAD_FOLDER}/{filename}"
+                db_path = f"data/uploads/{filename}"
                 conn.execute('INSERT OR REPLACE INTO sections (id, content) VALUES (?, ?)', (key, db_path))
         
         for key in request.form:
