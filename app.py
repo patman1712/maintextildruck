@@ -26,31 +26,37 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def init_db():
-    if not os.path.exists(DB_NAME):
-        conn = sqlite3.connect(DB_NAME)
-        c = conn.cursor()
-        c.execute('''
-            CREATE TABLE IF NOT EXISTS sections (
-                id TEXT PRIMARY KEY,
-                content TEXT
-            )
-        ''')
-        # Initial data based on user request
-        initial_data = [
-            ('gude', '<h2>Gude!</h2><p>Willkommen!</p>'),
-            ('about', '<h2>Über uns</h2><p>Wir sind...</p>'),
-            ('services', '<h2>Services</h2><p>Deine Services...</p>'),
-            ('references', '<h2>Referenzen</h2><p>Unsere zufriedenen Kunden...</p>'),
-            ('contact', '<h2>Kontakt</h2><p>Ruf uns an!</p>'),
-            ('catalog', '<h2>Katalog</h2><p>Hier findest du unsere Produkte.</p>'),
-            ('header_image', 'static/assets/cropped-f_frame-scaled-1.jpg'),
-            ('company_name', 'Dein Shop'),
-            ('page_title', 'Textildruck & Merchandise'),
-            ('meta_description', 'Dein Spezialist für Textildruck & Merchandise.')
-        ]
-        c.executemany('INSERT OR IGNORE INTO sections (id, content) VALUES (?, ?)', initial_data)
-        conn.commit()
-        conn.close()
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS sections (
+            id TEXT PRIMARY KEY,
+            content TEXT
+        )
+    ''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS customer_logos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            filepath TEXT
+        )
+    ''')
+    
+    # Initial data based on user request
+    initial_data = [
+        ('gude', '<h2>Gude!</h2><p>Willkommen!</p>'),
+        ('about', '<h2>Über uns</h2><p>Wir sind...</p>'),
+        ('services', '<h2>Services</h2><p>Deine Services...</p>'),
+        ('references', '<h2>Referenzen</h2><p>Unsere zufriedenen Kunden...</p>'),
+        ('contact', '<h2>Kontakt</h2><p>Ruf uns an!</p>'),
+        ('catalog', '<h2>Katalog</h2><p>Hier findest du unsere Produkte.</p>'),
+        ('header_image', 'static/assets/cropped-f_frame-scaled-1.jpg'),
+        ('company_name', 'Dein Shop'),
+        ('page_title', 'Textildruck & Merchandise'),
+        ('meta_description', 'Dein Spezialist für Textildruck & Merchandise.')
+    ]
+    c.executemany('INSERT OR IGNORE INTO sections (id, content) VALUES (?, ?)', initial_data)
+    conn.commit()
+    conn.close()
 
 def get_db_connection():
     conn = sqlite3.connect(DB_NAME)
