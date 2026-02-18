@@ -784,8 +784,10 @@ img:hover {
 		</div><!-- .site-branding-text -->
 
 		<div class="custom-header-button-wrapper" data-aos="fade-up" data-aos-delay="400">
+		{% if content.get('home_button_text') %}
 		<a class="custom-header-button button" href="{{ content.get('home_button_link', '#about') }}" target="_self" rel="nofollow" style="display: inline-block;">
 		{{ content.get('home_button_text', 'Wir setzen DICH richtig in Szene!') }}	</a>
+		{% endif %}
 </div><!-- .custom-header-button -->
 
 	</div><!-- .inner-wrap -->
