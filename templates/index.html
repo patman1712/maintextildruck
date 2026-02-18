@@ -951,35 +951,42 @@ img:hover {
             overflow: hidden;
             width: 100%;
             position: relative;
-            padding: 20px 0;
+            padding: 40px 0;
+            background: #fff;
         }
         .logo-slide-track {
             display: flex;
-            width: fit-content;
-            animation: scroll 40s linear infinite;
+            width: max-content;
+            animation: logo-scroll 30s linear infinite;
+        }
+        /* Pause animation on hover */
+        .logo-slide-track:hover {
+            animation-play-state: paused;
         }
         .logo-slide {
-            flex: 0 0 350px;
-            height: 200px;
+            flex: 0 0 200px;
+            height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 30px;
         }
         .logo-slide img {
-            max-height: 160px;
+            max-height: 100%;
             max-width: 100%;
             width: auto;
             height: auto;
             filter: grayscale(100%);
-            opacity: 1;
-            transition: filter 0.3s;
+            opacity: 0.7;
+            transition: all 0.3s ease;
             object-fit: contain;
         }
         .logo-slide img:hover {
             filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.1);
         }
-        @keyframes scroll {
+        @keyframes logo-scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
@@ -987,17 +994,25 @@ img:hover {
 
     <div class="logo-slider">
         <div class="logo-slide-track">
-            <!-- Original Logos -->
-            {% for logo in customer_logos %}
-            <div class="logo-slide">
-                <img src="{{ logo.filepath }}" alt="Customer Logo">
-            </div>
+            {# Create a large enough set of logos to ensure it covers the screen width twice #}
+            {# We repeat the logo list multiple times to handle cases with few logos #}
+            
+            {# First Set (Originals + Repetitions) #}
+            {% for i in [1,2,3,4,5,6,7,8] %}
+                {% for logo in customer_logos %}
+                <div class="logo-slide">
+                    <img src="{{ logo.filepath }}" alt="Customer Logo">
+                </div>
+                {% endfor %}
             {% endfor %}
-            <!-- Duplicate Logos for Infinite Scroll -->
-            {% for logo in customer_logos %}
-            <div class="logo-slide">
-                <img src="{{ logo.filepath }}" alt="Customer Logo">
-            </div>
+
+            {# Second Set (Duplicates for Infinite Loop) #}
+            {% for i in [1,2,3,4,5,6,7,8] %}
+                {% for logo in customer_logos %}
+                <div class="logo-slide">
+                    <img src="{{ logo.filepath }}" alt="Customer Logo">
+                </div>
+                {% endfor %}
             {% endfor %}
         </div>
     </div>
