@@ -119,79 +119,75 @@
                                 </div>
                                 
                                 {% for item_id in items %}
-                                    {% for section in sections %}
-                                        {% if section['id'] == item_id %}
-                                            <div class="mb-4 p-3 border rounded bg-light">
-                                                <label class="form-label fw-bold text-uppercase mb-3" style="letter-spacing: 1px; color: var(--primary-color);">
-                                                    {% if item_id == 'home_text' %}Einleitungstext
-                                                    {% elif item_id == 'company_name' %}Firmenname
-                                                    {% elif item_id == 'page_title' %}Seitentitel (Browser-Tab)
-                                                    {% elif item_id == 'meta_description' %}Beschreibung (SEO)
-                                                    {% elif item_id == 'home_button_text' %}Button-Text
-                                                    {% elif item_id == 'home_button_link' %}Button-Link
-                                                    {% elif item_id == 'header_image' %}Header-Bild
-                                                    {% elif item_id == 'impressum_button_text' %}Impressum Button Text
-                                                    {% elif item_id == 'impressum_button_link' %}Impressum Button Link
-                                                    {% elif item_id == 'datenschutz_button_text' %}Datenschutz Button Text
-                                                    {% elif item_id == 'datenschutz_button_link' %}Datenschutz Button Link
-                                                    {% else %}{{ item_id|upper|replace('_', ' ') }}{% endif %}
-                                                </label>
+                                    <div class="mb-4 p-3 border rounded bg-light">
+                                        <label class="form-label fw-bold text-uppercase mb-3" style="letter-spacing: 1px; color: var(--primary-color);">
+                                            {% if item_id == 'home_text' %}Einleitungstext
+                                            {% elif item_id == 'company_name' %}Firmenname
+                                            {% elif item_id == 'page_title' %}Seitentitel (Browser-Tab)
+                                            {% elif item_id == 'meta_description' %}Beschreibung (SEO)
+                                            {% elif item_id == 'home_button_text' %}Button-Text
+                                            {% elif item_id == 'home_button_link' %}Button-Link
+                                            {% elif item_id == 'header_image' %}Header-Bild
+                                            {% elif item_id == 'impressum_button_text' %}Impressum Button Text
+                                            {% elif item_id == 'impressum_button_link' %}Impressum Button Link
+                                            {% elif item_id == 'datenschutz_button_text' %}Datenschutz Button Text
+                                            {% elif item_id == 'datenschutz_button_link' %}Datenschutz Button Link
+                                            {% else %}{{ item_id|upper|replace('_', ' ') }}{% endif %}
+                                        </label>
 
-                                                {% if item_id == 'header_image' or item_id == 'service_intro_image' or item_id == 'site_logo' or item_id == 'textile_image_1' or item_id == 'textile_image_2' %}
-                                                     <div class="mb-3">
-                                                         <div>
-                                                             <img id="image-preview-{{ item_id }}" src="{{ section['content'] }}" style="max-width: 100%; height: auto; max-height: 200px;" class="img-fluid rounded">
-                                                         </div><br>
-                                                         <input type="file" name="{{ item_id }}" class="form-control" onchange="previewImage(this, 'image-preview-{{ item_id }}')">
-                                                         {% if item_id == 'header_image' %}
-                                                            <small class="text-muted">Empfohlene Größe: 2000x1200px</small>
-                                                         {% endif %}
-                                                     </div>
-                                                {% elif item_id.startswith('whatsapp_') or item_id.startswith('contact_label_') or item_id == 'contact_title' or item_id == 'contact_button_text' or item_id in ['resend_api_key', 'recipient_email', 'sender_email'] or item_id.endswith('_button_text') or item_id.endswith('_button_link') or item_id.startswith('menu_') or item_id.startswith('social_') or item_id == 'primary_color' or item_id == 'sidebar_contact_title' or (item_id.startswith('footer_') and not item_id.endswith('_content') and not item_id.endswith('_copyright')) or item_id == 'contact_text_color' or item_id == 'slider_headline' or item_id == 'textile_headline' or item_id == 'references_title' or item_id == 'company_name' or item_id == 'page_title' or item_id == 'meta_description' %}
-                                                    {% if item_id.endswith('_color') or item_id == 'primary_color' %}
-                                                        <div class="input-group">
-                                                            <input type="color" class="form-control form-control-color" id="{{ item_id }}" value="{{ section['content'] }}" title="Choose your color" onchange="document.getElementById('text-{{ item_id }}').value = this.value">
-                                                            <input type="text" class="form-control" id="text-{{ item_id }}" name="content_{{ item_id }}" value="{{ section['content'] }}" onchange="document.getElementById('{{ item_id }}').value = this.value">
-                                                        </div>
-                                                    {% else %}
-                                                        <input type="text" name="content_{{ item_id }}" class="form-control form-control-lg" value="{{ section['content'] }}">
-                                                        {% if item_id.endswith('_icon') %}
-                                                            <small class="text-muted">Bootstrap Icon Klasse, z.B. "bi bi-instagram" oder "bi bi-whatsapp"</small>
-                                                        {% elif item_id == 'resend_api_key' %}
-                                                            <small class="text-muted d-block mt-1">Erstelle einen API Key unter <a href="https://resend.com/api-keys" target="_blank">resend.com</a>.</small>
-                                                        {% elif item_id == 'recipient_email' %}
-                                                            <small class="text-muted d-block mt-1">Hier deine E-Mail-Adresse eintragen, an welche die Anfragen gesendet werden sollen.</small>
-                                                        {% elif item_id == 'sender_email' %}
-                                                            <small class="text-muted d-block mt-1">Die Adresse, von der die Mail technisch gesendet wird (muss bei Resend verifiziert sein).</small>
-                                                        {% endif %}
-                                                    {% endif %}
-                                                {% elif item_id == 'slider_text' %}
-                                                    <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ section['content'] }}</textarea>
-                                                    <hr>
-                                                    <label class="form-label fw-bold mt-3">Kundenlogos verwalten:</label>
-                                                    <div class="row">
-                                                        {% for logo in customer_logos %}
-                                                        <div class="col-md-2 mb-3 text-center">
-                                                            <div class="border p-2 rounded">
-                                                                <img src="{{ logo.filepath }}" class="img-fluid mb-2" style="max-height: 50px;">
-                                                                <button type="submit" name="delete_logo_id" value="{{ logo.id }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Logo wirklich löschen?')">Löschen</button>
-                                                            </div>
-                                                        </div>
-                                                        {% endfor %}
-                                                    </div>
-                                                    <div class="mt-3">
-                                                        <label class="form-label">Neues Logo hochladen:</label>
-                                                        <input type="file" name="new_customer_logo" class="form-control">
-                                                    </div>
-                                                {% elif item_id == 'instagram_widget' %}
-                                                    <textarea name="content_{{ item_id }}" class="form-control" rows="6" style="font-family: monospace;">{{ section['content'] }}</textarea>
-                                                    <small class="text-muted">Füge hier den HTML-Code von LightWidget ein. Achtung: Keine Vorschau verfügbar, da Scripts im Admin-Bereich blockiert werden könnten.</small>
-                                                {% else %}
-                                                    <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ section['content'] }}</textarea>
+                                        {% if item_id == 'header_image' or item_id == 'service_intro_image' or item_id == 'site_logo' or item_id == 'textile_image_1' or item_id == 'textile_image_2' %}
+                                             <div class="mb-3">
+                                                 <div>
+                                                     <img id="image-preview-{{ item_id }}" src="{{ content.get(item_id, '') }}" style="max-width: 100%; height: auto; max-height: 200px;" class="img-fluid rounded">
+                                                 </div><br>
+                                                 <input type="file" name="{{ item_id }}" class="form-control" onchange="previewImage(this, 'image-preview-{{ item_id }}')">
+                                                 {% if item_id == 'header_image' %}
+                                                    <small class="text-muted">Empfohlene Größe: 2000x1200px</small>
+                                                 {% endif %}
+                                             </div>
+                                        {% elif item_id.startswith('whatsapp_') or item_id.startswith('contact_label_') or item_id == 'contact_title' or item_id == 'contact_button_text' or item_id in ['resend_api_key', 'recipient_email', 'sender_email'] or item_id.endswith('_button_text') or item_id.endswith('_button_link') or item_id.startswith('menu_') or item_id.startswith('social_') or item_id == 'primary_color' or item_id == 'sidebar_contact_title' or (item_id.startswith('footer_') and not item_id.endswith('_content') and not item_id.endswith('_copyright')) or item_id == 'contact_text_color' or item_id == 'slider_headline' or item_id == 'textile_headline' or item_id == 'references_title' or item_id == 'company_name' or item_id == 'page_title' or item_id == 'meta_description' %}
+                                            {% if item_id.endswith('_color') or item_id == 'primary_color' %}
+                                                <div class="input-group">
+                                                    <input type="color" class="form-control form-control-color" id="{{ item_id }}" value="{{ content.get(item_id, '#000000') }}" title="Choose your color" onchange="document.getElementById('text-{{ item_id }}').value = this.value">
+                                                    <input type="text" class="form-control" id="text-{{ item_id }}" name="content_{{ item_id }}" value="{{ content.get(item_id, '#000000') }}" onchange="document.getElementById('{{ item_id }}').value = this.value">
+                                                </div>
+                                            {% else %}
+                                                <input type="text" name="content_{{ item_id }}" class="form-control form-control-lg" value="{{ content.get(item_id, '') }}">
+                                                {% if item_id.endswith('_icon') %}
+                                                    <small class="text-muted">Bootstrap Icon Klasse, z.B. "bi bi-instagram" oder "bi bi-whatsapp"</small>
+                                                {% elif item_id == 'resend_api_key' %}
+                                                    <small class="text-muted d-block mt-1">Erstelle einen API Key unter <a href="https://resend.com/api-keys" target="_blank">resend.com</a>.</small>
+                                                {% elif item_id == 'recipient_email' %}
+                                                    <small class="text-muted d-block mt-1">Hier deine E-Mail-Adresse eintragen, an welche die Anfragen gesendet werden sollen.</small>
+                                                {% elif item_id == 'sender_email' %}
+                                                    <small class="text-muted d-block mt-1">Die Adresse, von der die Mail technisch gesendet wird (muss bei Resend verifiziert sein).</small>
                                                 {% endif %}
+                                            {% endif %}
+                                        {% elif item_id == 'slider_text' %}
+                                            <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ content.get(item_id, '') }}</textarea>
+                                            <hr>
+                                            <label class="form-label fw-bold mt-3">Kundenlogos verwalten:</label>
+                                            <div class="row">
+                                                {% for logo in customer_logos %}
+                                                <div class="col-md-2 mb-3 text-center">
+                                                    <div class="border p-2 rounded">
+                                                        <img src="{{ logo.filepath }}" class="img-fluid mb-2" style="max-height: 50px;">
+                                                        <button type="submit" name="delete_logo_id" value="{{ logo.id }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Logo wirklich löschen?')">Löschen</button>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
                                             </div>
+                                            <div class="mt-3">
+                                                <label class="form-label">Neues Logo hochladen:</label>
+                                                <input type="file" name="new_customer_logo" class="form-control">
+                                            </div>
+                                        {% elif item_id == 'instagram_widget' %}
+                                            <textarea name="content_{{ item_id }}" class="form-control" rows="6" style="font-family: monospace;">{{ content.get(item_id, '') }}</textarea>
+                                            <small class="text-muted">Füge hier den HTML-Code von LightWidget ein. Achtung: Keine Vorschau verfügbar, da Scripts im Admin-Bereich blockiert werden könnten.</small>
+                                        {% else %}
+                                            <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ content.get(item_id, '') }}</textarea>
                                         {% endif %}
-                                    {% endfor %}
+                                    </div>
                                 {% endfor %}
                                 
                                 <div class="mt-4 text-end">
