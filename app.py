@@ -121,7 +121,7 @@ def send_email():
         flash('Nachricht erfolgreich gesendet!')
     except Exception as e:
         print(f"Error sending email: {e}")
-        flash('Fehler beim Senden der Nachricht.')
+        flash(f'Fehler beim Senden der Nachricht: {e}')
 
     return redirect(url_for('index', _anchor='kontakt'))
 
