@@ -839,6 +839,74 @@ img:hover {
         font-size: 1rem;
     }
 }
+
+/* =========================================
+   SIDEBAR / SIDE-NAV STYLES
+   Improved Formatting & Layout
+   ========================================= */
+
+.side-nav .widget {
+    text-align: left !important; /* Force left alignment */
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1); /* Subtle separator */
+}
+
+.side-nav .widget:last-child {
+    border-bottom: none;
+}
+
+/* Stylish Widget Titles */
+.side-nav .widget .title {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+    color: #fff;
+    position: relative;
+    padding-left: 15px;
+}
+
+/* Accent line next to title */
+.side-nav .widget .title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    bottom: 5px;
+    width: 4px;
+    background-color: #fff;
+    border-radius: 2px;
+}
+
+/* Text Content Styling */
+.side-nav .textwidget {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.95);
+    font-weight: 300;
+}
+
+.side-nav .textwidget p {
+    margin-bottom: 15px;
+}
+
+.side-nav .textwidget strong {
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Social Icons in Sidebar */
+.side-nav .wp-block-wpzoom-blocks-social-icons {
+    justify-content: flex-start !important; /* Align left */
+}
+
+/* Logo in Sidebar */
+.side-nav .widget_media_image img {
+    margin: 0 auto 0 0 !important; /* Align left */
+    display: block;
+}
 </style>
 </head>
 
