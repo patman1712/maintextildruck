@@ -65,7 +65,11 @@ def get_db_connection():
 
 @app.route('/data/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    response = send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '-1'
+    return response
 
 @app.route('/')
 def index():
