@@ -883,13 +883,19 @@ img:hover {
 /* Text Content Styling */
 .side-nav .textwidget {
     font-size: 1.05rem;
-    line-height: 1.8;
+    line-height: 1.4; /* Reduced line height */
     color: rgba(255,255,255,0.95);
     font-weight: 300;
 }
 
 .side-nav .textwidget p {
-    margin-bottom: 15px;
+    margin-bottom: 5px; /* Reduced margin between paragraphs */
+}
+
+.side-nav .textwidget br {
+    display: block;
+    content: "";
+    margin-bottom: 2px; /* Control spacing if BR tags are used */
 }
 
 .side-nav .textwidget strong {
