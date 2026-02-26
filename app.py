@@ -50,7 +50,7 @@ def init_db():
         ('contact', '<h2>Kontakt</h2><p>Ruf uns an!</p>'),
         ('catalog', '<h2>Katalog</h2><p>Hier findest du unsere Produkte.</p>'),
         ('header_image', 'static/assets/cropped-f_frame-scaled-1.jpg'),
-        ('company_name', 'Dein Shop'),
+        ('company_name', 'Main Textildruck GmbH'),
         ('page_title', 'Textildruck & Merchandise'),
         ('meta_description', 'Dein Spezialist für Textildruck & Merchandise.')
     ]
