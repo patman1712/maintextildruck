@@ -9,8 +9,9 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Tailwind: bg-gradient-to-b from-red-900 to-red-700 */
-            background: linear-gradient(to bottom, #7f1d1d, #b91c1c);
+            /* Dynamic Gradient Background */
+            background: linear-gradient(to bottom, {{ content.get('gradient_start', '#7f1d1d') }}, {{ content.get('gradient_end', '#b91c1c') }});
+            background-attachment: fixed; /* Ensure gradient covers full height on mobile */
             height: 100vh;
             display: flex;
             align-items: center;

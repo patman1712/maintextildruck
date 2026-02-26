@@ -449,7 +449,7 @@ color: #000;
 }
 
 .side-nav__scrollable-container {
-    background-color: {{ content.get('primary_color', '#bd1026') }} !important;
+    background: transparent !important; /* Managed by gradient above */
     color: #fff;
 }
 
@@ -582,8 +582,12 @@ html {
     scroll-padding-top: 120px;
 }
 #masthead, .site-header, .navbar, .header-inner {
-    background-color: {{ content.get('primary_color', '#bd1026') }} !important;
-    background: {{ content.get('primary_color', '#bd1026') }} !important;
+    background: linear-gradient(to bottom, {{ content.get('gradient_start', '#7f1d1d') }}, {{ content.get('gradient_end', '#b91c1c') }}) !important;
+    border-bottom: 1px solid {{ content.get('gradient_border', '#991b1b') }};
+}
+.side-nav, .side-nav__scrollable-container {
+    background: linear-gradient(to bottom, {{ content.get('gradient_start', '#7f1d1d') }}, {{ content.get('gradient_end', '#b91c1c') }}) !important;
+    border-right: 1px solid {{ content.get('gradient_border', '#991b1b') }};
 }
 .site-footer {
     background-color: {{ content.get('primary_color', '#bd1026') }} !important;

@@ -61,10 +61,9 @@
             top: var(--topbar-height);
             bottom: 0;
             left: 0;
-            /* Tailwind: bg-gradient-to-b from-red-900 to-red-700 */
-            background: linear-gradient(to bottom, #7f1d1d, #b91c1c);
-            /* Tailwind: border-red-800 */
-            border-right: 1px solid #991b1b;
+            /* Dynamic Gradient */
+            background: linear-gradient(to bottom, {{ content.get('gradient_start', '#7f1d1d') }}, {{ content.get('gradient_end', '#b91c1c') }});
+            border-right: 1px solid {{ content.get('gradient_border', '#991b1b') }};
             overflow-y: auto;
             z-index: 1020;
             padding-top: 1rem;
@@ -376,6 +375,9 @@
                                     {% elif item_id == 'home_button_link' %}Button-Link
                                     {% elif item_id == 'header_image' %}Header-Bild
                                     {% elif item_id == 'site_favicon' %}Favicon (Browser-Tab & Home-Button)
+                                    {% elif item_id == 'gradient_start' %}Gradient Start (Oben)
+                                    {% elif item_id == 'gradient_end' %}Gradient Ende (Unten)
+                                    {% elif item_id == 'gradient_border' %}Rahmenfarbe
                                     {% else %}{{ item_id|replace('_', ' ')|title }}{% endif %}
                                 </label>
 
@@ -388,7 +390,7 @@
                                          {% endif %}
                                      </div>
                                      <input type="file" name="{{ item_id }}" class="form-control" onchange="previewImage(this, 'image-preview-{{ item_id }}')">
-                                {% elif item_id.endswith('_color') or item_id == 'primary_color' %}
+                                {% elif item_id.endswith('_color') or item_id in ['primary_color', 'gradient_start', 'gradient_end', 'gradient_border'] %}
                                     <div class="input-group">
                                         <input type="color" class="form-control form-control-color" id="{{ item_id }}" value="{{ item_content }}" title="Choose your color" onchange="document.getElementById('text-{{ item_id }}').value = this.value">
                                         <input type="text" class="form-control" id="text-{{ item_id }}" name="content_{{ item_id }}" value="{{ item_content }}" onchange="document.getElementById('{{ item_id }}').value = this.value">
