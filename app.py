@@ -86,6 +86,12 @@ def index():
     
     # Convert list of rows to dictionary for easy access in template
     content = {row['id']: row['content'] for row in sections}
+    
+    # Check for maintenance mode
+    maintenance_mode = content.get('maintenance_mode', 'off')
+    if maintenance_mode == 'on' and 'logged_in' not in session:
+        return render_template('maintenance.html', content=content)
+        
     return render_template('index.html', content=content, customer_logos=logos)
 
 @app.route('/send_email', methods=['POST'])
@@ -209,7 +215,8 @@ def admin():
             'social_2_icon', 'social_2_link', 'social_2_color'
         ],
         'SIDEBAR': ['sidebar_contact_title', 'sidebar_contact_content', 'sidebar_about_text'],
-        'DESIGN': ['site_logo', 'primary_color']
+        'DESIGN': ['site_logo', 'primary_color'],
+        'WARTUNG': ['maintenance_mode', 'maintenance_title', 'maintenance_text']
     }
     
     active_tab = request.args.get('active_tab')

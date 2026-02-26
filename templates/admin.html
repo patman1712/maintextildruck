@@ -276,7 +276,7 @@
             </a>
             <div class="collapse" id="menu-einstellungen">
                 {% for category, items in menu_structure.items() %}
-                    {% if category in ['EMAIL SETTINGS', 'RECHTLICHES', 'FOOTER', 'NAVIGATION', 'SIDEBAR', 'DESIGN'] %}
+                    {% if category in ['EMAIL SETTINGS', 'RECHTLICHES', 'FOOTER', 'NAVIGATION', 'SIDEBAR', 'DESIGN', 'WARTUNG'] %}
                     <a href="#" class="nav-link" data-bs-target="#{{ category|replace(' ', '-') }}" onclick="showTab('{{ category|replace(' ', '-') }}', this)">
                         {% if category == 'EMAIL SETTINGS' %}<i class="bi bi-envelope-gear"></i>
                         {% elif category == 'RECHTLICHES' %}<i class="bi bi-file-earmark-text"></i>
@@ -284,6 +284,7 @@
                         {% elif category == 'NAVIGATION' %}<i class="bi bi-menu-button-wide"></i>
                         {% elif category == 'SIDEBAR' %}<i class="bi bi-layout-sidebar"></i>
                         {% elif category == 'DESIGN' %}<i class="bi bi-palette"></i>
+                        {% elif category == 'WARTUNG' %}<i class="bi bi-cone-striped"></i>
                         {% endif %}
                         {{ category|title }}
                     </a>
@@ -413,7 +414,12 @@
                                 {% elif item_id == 'instagram_widget' %}
                                     <textarea name="content_{{ item_id }}" class="form-control font-monospace" rows="6">{{ item_content }}</textarea>
                                     <div class="form-text">Füge hier den HTML-Code von LightWidget ein.</div>
-                                {% elif item_id.startswith('whatsapp_') or item_id.startswith('contact_label_') or item_id == 'contact_title' or item_id == 'contact_button_text' or item_id in ['resend_api_key', 'recipient_email', 'sender_email'] or item_id.endswith('_button_text') or item_id.endswith('_button_link') or item_id.startswith('menu_') or item_id.startswith('social_') or item_id == 'sidebar_contact_title' or (item_id.startswith('footer_') and not item_id.endswith('_content') and not item_id.endswith('_copyright')) or item_id == 'contact_text_color' or item_id == 'slider_headline' or item_id == 'textile_headline' or item_id == 'references_title' or item_id == 'company_name' or item_id == 'page_title' or item_id == 'meta_description' or item_id == 'home_button_text' or item_id == 'home_button_link' %}
+                                {% elif item_id == 'maintenance_mode' %}
+                                    <select name="content_{{ item_id }}" class="form-select">
+                                        <option value="off" {% if item_content == 'off' %}selected{% endif %}>Deaktiviert (Website online)</option>
+                                        <option value="on" {% if item_content == 'on' %}selected{% endif %}>Aktiviert (Wartungsmodus)</option>
+                                    </select>
+                                {% elif item_id.startswith('whatsapp_') or item_id.startswith('contact_label_') or item_id == 'contact_title' or item_id == 'contact_button_text' or item_id in ['resend_api_key', 'recipient_email', 'sender_email'] or item_id.endswith('_button_text') or item_id.endswith('_button_link') or item_id.startswith('menu_') or item_id.startswith('social_') or item_id == 'sidebar_contact_title' or (item_id.startswith('footer_') and not item_id.endswith('_content') and not item_id.endswith('_copyright')) or item_id == 'contact_text_color' or item_id == 'slider_headline' or item_id == 'textile_headline' or item_id == 'references_title' or item_id == 'company_name' or item_id == 'page_title' or item_id == 'meta_description' or item_id == 'home_button_text' or item_id == 'home_button_link' or item_id == 'maintenance_title' %}
                                     <input type="text" name="content_{{ item_id }}" class="form-control" value="{{ item_content }}">
                                 {% else %}
                                     <textarea id="summernote-{{ item_id }}" name="content_{{ item_id }}">{{ item_content }}</textarea>
