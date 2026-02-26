@@ -373,10 +373,11 @@
                                     {% elif item_id == 'home_button_text' %}Button-Text
                                     {% elif item_id == 'home_button_link' %}Button-Link
                                     {% elif item_id == 'header_image' %}Header-Bild
+                                    {% elif item_id == 'site_favicon' %}Favicon (Browser-Tab & Home-Button)
                                     {% else %}{{ item_id|replace('_', ' ')|title }}{% endif %}
                                 </label>
 
-                                {% if item_id == 'header_image' or item_id == 'service_intro_image' or item_id == 'site_logo' or item_id == 'textile_image_1' or item_id == 'textile_image_2' %}
+                                {% if item_id == 'header_image' or item_id == 'service_intro_image' or item_id == 'site_logo' or item_id == 'site_favicon' or item_id == 'textile_image_1' or item_id == 'textile_image_2' %}
                                      <div class="bg-light p-3 rounded border mb-2 text-center">
                                          {% if item_content %}
                                          <img id="image-preview-{{ item_id }}" src="{{ item_content }}" style="max-height: 200px; max-width: 100%; object-fit: contain;" class="rounded shadow-sm">

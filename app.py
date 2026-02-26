@@ -215,7 +215,7 @@ def admin():
             'social_2_icon', 'social_2_link', 'social_2_color'
         ],
         'SIDEBAR': ['sidebar_contact_title', 'sidebar_contact_content', 'sidebar_about_text'],
-        'DESIGN': ['site_logo', 'primary_color'],
+        'DESIGN': ['site_logo', 'site_favicon', 'primary_color'],
         'WARTUNG': ['maintenance_mode', 'maintenance_title', 'maintenance_text']
     }
     
